@@ -10,6 +10,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gorilla/mux"
+	"github.com/robfig/cron/v3"
 )
 
 // CovidWorldwide initial struct
@@ -23,7 +24,7 @@ var covidWorldwide CovidWorldwide
 
 // CountryCovid initial struct
 type CountryCovid struct {
-	Name           string `json:"name"`
+	Country        string `json:"country"`
 	TotalCases     int    `json:"totalCases"`
 	NewCases       int    `json:"newCases"`
 	TotalDeaths    int    `json:"totalDeaths"`
@@ -72,7 +73,7 @@ func GetAll() {
 		}
 	})
 
-	fmt.Println("Global cases updated")
+	fmt.Println("Global numbers updated")
 }
 
 // GetCountries gets numbers for each country
@@ -95,9 +96,9 @@ func GetCountries() {
 	var countriesTableLenght = doc.Find("table#main_table_countries_today th").Length()
 	countriesTable.Find("tbody").Find("tr:not(.row_continent)").Find("td").Each(func(i int, s *goquery.Selection) {
 		if i%countriesTableLenght == 1 {
-			name := s.Text()
+			countryName := s.Text()
 			var country CountryCovid
-			country.Name = name
+			country.Country = countryName
 			countryCovid = append(countryCovid, country)
 		}
 		if i%countriesTableLenght == 2 {
@@ -168,6 +169,11 @@ func GetCountries() {
 func main() {
 	GetAll()
 	GetCountries()
+
+	c := cron.New()
+	c.AddFunc("@every 5m", GetAll)
+	c.AddFunc("@every 5m", GetCountries)
+	c.Start()
 
 	r := mux.NewRouter()
 
