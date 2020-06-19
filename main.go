@@ -24,20 +24,20 @@ var covidWorldwide CovidWorldwide
 // CountryCovid initial struct
 type CountryCovid struct {
 	Name           string `json:"name"`
-	TotalCases     string `json:"totalCases"`
-	NewCases       string `json:"newCases"`
-	TotalDeaths    string `json:"totalDeaths"`
-	NewDeaths      string `json:"newDeaths"`
-	TotalRecovered string `json:"totalRecovered"`
-	ActiveCases    string `json:"activeCases"`
-	CriticalCases  string `json:"criticalCases"`
-	TotalTests     string `json:"totalTests"`
-	Population     string `json:"population"`
+	TotalCases     int    `json:"totalCases"`
+	NewCases       int    `json:"newCases"`
+	TotalDeaths    int    `json:"totalDeaths"`
+	NewDeaths      int    `json:"newDeaths"`
+	TotalRecovered int    `json:"totalRecovered"`
+	ActiveCases    int    `json:"activeCases"`
+	CriticalCases  int    `json:"criticalCases"`
+	TotalTests     int    `json:"totalTests"`
+	Population     int    `json:"population"`
 }
 
 var countryCovid []CountryCovid
 
-var replacer = strings.NewReplacer(" ", "", ",", "")
+var replacer = strings.NewReplacer(" ", "", ",", "", "+", "")
 
 // GetAll gets all worldwide numbers
 func GetAll() {
@@ -102,39 +102,57 @@ func GetCountries() {
 		}
 		if i%countriesTableLenght == 2 {
 			totalCases := s.Text()
-			countryCovid[len(countryCovid)-1].TotalCases = totalCases
+			totalCases = replacer.Replace(totalCases)
+			i1, _ := strconv.Atoi(totalCases)
+			countryCovid[len(countryCovid)-1].TotalCases = i1
 		}
 		if i%countriesTableLenght == 3 {
 			newCases := s.Text()
-			countryCovid[len(countryCovid)-1].NewCases = newCases
+			newCases = replacer.Replace(newCases)
+			i1, _ := strconv.Atoi(newCases)
+			countryCovid[len(countryCovid)-1].NewCases = i1
 		}
 		if i%countriesTableLenght == 4 {
 			totalDeaths := s.Text()
-			countryCovid[len(countryCovid)-1].TotalDeaths = totalDeaths
+			totalDeaths = replacer.Replace(totalDeaths)
+			i1, _ := strconv.Atoi(totalDeaths)
+			countryCovid[len(countryCovid)-1].TotalDeaths = i1
 		}
 		if i%countriesTableLenght == 5 {
 			newDeaths := s.Text()
-			countryCovid[len(countryCovid)-1].NewDeaths = newDeaths
+			newDeaths = replacer.Replace(newDeaths)
+			i1, _ := strconv.Atoi(newDeaths)
+			countryCovid[len(countryCovid)-1].NewDeaths = i1
 		}
 		if i%countriesTableLenght == 6 {
 			totalRecovered := s.Text()
-			countryCovid[len(countryCovid)-1].TotalRecovered = totalRecovered
+			totalRecovered = replacer.Replace(totalRecovered)
+			i1, _ := strconv.Atoi(totalRecovered)
+			countryCovid[len(countryCovid)-1].TotalRecovered = i1
 		}
 		if i%countriesTableLenght == 8 {
 			activeCases := s.Text()
-			countryCovid[len(countryCovid)-1].ActiveCases = activeCases
+			activeCases = replacer.Replace(activeCases)
+			i1, _ := strconv.Atoi(activeCases)
+			countryCovid[len(countryCovid)-1].ActiveCases = i1
 		}
 		if i%countriesTableLenght == 9 {
 			criticalCases := s.Text()
-			countryCovid[len(countryCovid)-1].CriticalCases = criticalCases
+			criticalCases = replacer.Replace(criticalCases)
+			i1, _ := strconv.Atoi(criticalCases)
+			countryCovid[len(countryCovid)-1].CriticalCases = i1
 		}
 		if i%countriesTableLenght == 12 {
 			totalTests := s.Text()
-			countryCovid[len(countryCovid)-1].TotalTests = totalTests
+			totalTests = replacer.Replace(totalTests)
+			i1, _ := strconv.Atoi(totalTests)
+			countryCovid[len(countryCovid)-1].TotalTests = i1
 		}
 		if i%countriesTableLenght == 14 {
 			population := s.Text()
-			countryCovid[len(countryCovid)-1].Population = population
+			population = replacer.Replace(population)
+			i1, _ := strconv.Atoi(population)
+			countryCovid[len(countryCovid)-1].Population = i1
 		}
 	})
 
