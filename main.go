@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gorilla/mux"
@@ -12,9 +14,9 @@ import (
 
 // CovidWorldwide initial struct
 type CovidWorldwide struct {
-	Cases     string `json:"cases"`
-	Deaths    string `json:"deaths"`
-	Recovered string `json:"recovered"`
+	Cases     int `json:"cases"`
+	Deaths    int `json:"deaths"`
+	Recovered int `json:"recovered"`
 }
 
 var covidWorldwide CovidWorldwide
@@ -35,6 +37,8 @@ type CountryCovid struct {
 
 var countryCovid []CountryCovid
 
+var replacer = strings.NewReplacer(" ", "", ",", "")
+
 // GetAll gets all worldwide numbers
 func GetAll() {
 	res, err := http.Get("https://www.worldometers.info/coronavirus/")
@@ -54,11 +58,17 @@ func GetAll() {
 	doc.Find(".maincounter-number").Each(func(i int, s *goquery.Selection) {
 		number := s.Find("span").Text()
 		if i == 0 {
-			covidWorldwide.Cases = number
+			number = replacer.Replace(number)
+			i1, _ := strconv.Atoi(number)
+			covidWorldwide.Cases = i1
 		} else if i == 1 {
-			covidWorldwide.Deaths = number
+			number = replacer.Replace(number)
+			i1, _ := strconv.Atoi(number)
+			covidWorldwide.Deaths = i1
 		} else {
-			covidWorldwide.Recovered = number
+			number = replacer.Replace(number)
+			i1, _ := strconv.Atoi(number)
+			covidWorldwide.Recovered = i1
 		}
 	})
 
