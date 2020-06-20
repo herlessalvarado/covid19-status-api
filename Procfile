@@ -1,0 +1,1 @@
+web: bin/covid19-status-api

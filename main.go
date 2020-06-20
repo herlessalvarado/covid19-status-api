@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -205,5 +206,7 @@ func main() {
 		json.NewEncoder(w).Encode(requestedCountry)
 	}).Methods("GET")
 
-	http.ListenAndServe(":8000", r)
+	port := os.Getenv("PORT")
+
+	http.ListenAndServe(":"+port, r)
 }
