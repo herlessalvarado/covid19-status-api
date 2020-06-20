@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -163,6 +164,10 @@ func GetCountries() {
 		countryCovid = countryCovid[:len(countryCovid)-1]
 	}
 
+	sort.SliceStable(countryCovid, func(i, j int) bool {
+		return countryCovid[i].TotalCases > countryCovid[j].TotalCases
+	})
+
 	fmt.Println("Country cases updated")
 }
 
@@ -185,6 +190,19 @@ func main() {
 	r.HandleFunc("/countries", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(countryCovid)
+	}).Methods("GET")
+
+	r.HandleFunc("/countries/{country}", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		vars := mux.Vars(r)
+		country := vars["country"]
+		var requestedCountry CountryCovid
+		for _, v := range countryCovid {
+			if v.Country == country {
+				requestedCountry = v
+			}
+		}
+		json.NewEncoder(w).Encode(requestedCountry)
 	}).Methods("GET")
 
 	http.ListenAndServe(":8000", r)
