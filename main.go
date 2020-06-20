@@ -94,6 +94,8 @@ func GetCountries() {
 		log.Fatal(err)
 	}
 
+	countryCovid = nil
+
 	var countriesTable = doc.Find("table#main_table_countries_today")
 	var countriesTableLenght = doc.Find("table#main_table_countries_today th").Length()
 	countriesTable.Find("tbody").Find("tr:not(.row_continent)").Find("td").Each(func(i int, s *goquery.Selection) {
